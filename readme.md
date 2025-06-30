@@ -43,12 +43,11 @@ Weathrly is a responsive and accessible weather dashboard built using **Vanilla 
    git clone https://github.com/yourusername/weathrly.git
    cd weathrly
 
-2.const part1 = 'your';
+2. const part1 = 'your';
 const part2 = 'split';
 const part3 = 'apikey';
 const API_KEY = part1 + part2 + part3;
 
-3. Github pages link 
 
 
 ## 🚀 Planned Improvements
@@ -57,3 +56,8 @@ const API_KEY = part1 + part2 + part3;
 - 📆 Add multi-day forecast  
 - 🌙 Add dark mode toggle  
 - 🌐 Add language options (i18n)
+
+## 🌐 Live Demo
+
+> 🔗 [Click here to view Weathrly Live](https://infrabeam1927.github.io/weatherly/)
+
