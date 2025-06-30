@@ -1,0 +1,73 @@
+/* Reset and base styling */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.app {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 30px 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+input {
+  padding: 10px;
+  width: 70%;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px;
+  margin-left: 5px;
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+#weatherDisplay {
+  margin-top: 20px;
+}
+
+.error {
+  color: #ffdddd;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+/* Responsive layout */
+@media (max-width: 500px) {
+  input {
+    width: 60%;
+  }
+
+  .app {
+    padding: 20px 10px;
+  }
+}
