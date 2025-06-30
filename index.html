@@ -8,17 +8,23 @@
 </head>
 <body>
   <div class="app">
-    <h1>Weathrly-with toggle 🌦️</h1>
+    <h1>Weathrly 🌦️</h1>
 
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle">🌓 Toggle Dark Mode</button>
+
+    <!-- Weather Form -->
     <form id="weatherForm">
       <input type="text" id="cityInput" placeholder="Enter city..." required />
       <button type="submit">Get Weather</button>
     </form>
 
+    <!-- Display Results -->
     <div id="weatherDisplay"></div>
     <p id="lastUpdated"></p>
     <button id="refreshBtn" style="display: none;">🔄 Refresh</button>
 
+    <!-- Error Message -->
     <p id="error" class="error"></p>
   </div>
 
