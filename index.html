@@ -10,15 +10,27 @@
   <div class="app">
     <h1>Weathrly 🌦️</h1>
 
+    <!-- Toggle Switch Container -->
+    <div class="toggle-container">
+      <label class="switch">
+        <input type="checkbox" id="darkModeToggle" />
+        <span class="slider round"></span>
+      </label>
+      <span class="toggle-label">Dark Mode</span>
+    </div>
+
+    <!-- Weather Form -->
     <form id="weatherForm">
       <input type="text" id="cityInput" placeholder="Enter city..." required />
       <button type="submit">Get Weather</button>
     </form>
 
+    <!-- Display Results -->
     <div id="weatherDisplay"></div>
     <p id="lastUpdated"></p>
     <button id="refreshBtn" style="display: none;">🔄 Refresh</button>
 
+    <!-- Error Message -->
     <p id="error" class="error"></p>
   </div>
 

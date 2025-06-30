@@ -85,3 +85,21 @@ function showLastUpdated(timestamp) {
   const date = new Date(timestamp);
   lastUpdated.textContent = `Last updated: ${date.toLocaleTimeString()}`;
 }
+const darkToggle = document.getElementById('darkModeToggle');
+
+// Apply previously saved mode
+if (localStorage.getItem('darkMode') === 'enabled') {
+  document.body.classList.add('dark-mode');
+  darkToggle.checked = true;
+}
+
+// Toggle dark mode and save preference
+darkToggle.addEventListener('change', () => {
+  document.body.classList.toggle('dark-mode');
+
+  if (document.body.classList.contains('dark-mode')) {
+    localStorage.setItem('darkMode', 'enabled');
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+  }
+});
