@@ -5,6 +5,7 @@ const errorEl = document.getElementById('error');
 const lastUpdated = document.getElementById('lastUpdated');
 const refreshBtn = document.getElementById('refreshBtn');
 
+
 // Obfuscated API key
 const part1 = 'aa1d1e34e';         // example - use actual parts of your key
 const part2 = '51b6f6cb69275';
@@ -30,6 +31,7 @@ refreshBtn.addEventListener('click', async () => {
     await loadWeather(currentCity, true); // force refresh
   }
 });
+
 
 async function loadWeather(city, forceRefresh = false) {
   const cachedItem = localStorage.getItem(city);
@@ -143,6 +145,8 @@ const geoBtn = document.getElementById('geoBtn');
 
 geoBtn.addEventListener('click', () => {
   if ('geolocation' in navigator) {
+    cityInput.value = "Loading...";
+
     navigator.geolocation.getCurrentPosition(async (position) => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
@@ -152,29 +156,31 @@ geoBtn.addEventListener('click', () => {
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
         );
         const data = await res.json();
+        console.log("Geolocation data:", data);  // ✅ inspect result
 
-        // Optional: Cache by city name if available
         if (data.name) {
+          cityInput.value = data.name; // ✅ Autofill actual city name
           localStorage.setItem(data.name.toLowerCase(), JSON.stringify({
             data,
             timestamp: Date.now()
           }));
+        } else {
+          cityInput.value = ''; // fallback
         }
 
         displayWeather(data);
         showLastUpdated(Date.now());
         refreshBtn.style.display = 'inline-block';
-
-        // ✅ Autofill city input with detected city name
-        cityInput.value = data.name;
-
+        errorEl.textContent = '';
       } catch (err) {
-        console.error('Error fetching location weather:', err);
+        console.error('Error fetching weather for location:', err);
         errorEl.textContent = "Unable to fetch weather for your location.";
+        cityInput.value = '';
       }
     }, (error) => {
       console.warn('Geolocation failed or denied:', error);
       errorEl.textContent = "Geolocation is not enabled or failed.";
+      cityInput.value = '';
     });
   } else {
     errorEl.textContent = "Geolocation is not supported in your browser.";
