@@ -164,6 +164,10 @@ geoBtn.addEventListener('click', () => {
         displayWeather(data);
         showLastUpdated(Date.now());
         refreshBtn.style.display = 'inline-block';
+
+        // ✅ Autofill city input with detected city name
+        cityInput.value = data.name;
+
       } catch (err) {
         console.error('Error fetching location weather:', err);
         errorEl.textContent = "Unable to fetch weather for your location.";
@@ -176,3 +180,4 @@ geoBtn.addEventListener('click', () => {
     errorEl.textContent = "Geolocation is not supported in your browser.";
   }
 });
+
