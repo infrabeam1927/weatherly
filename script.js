@@ -103,3 +103,39 @@ darkToggle.addEventListener('change', () => {
     localStorage.setItem('darkMode', 'disabled');
   }
 });
+window.addEventListener('load', () => {
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const apiKey = part1 + part2 + part3;
+
+      try {
+        const res = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+        );
+
+        const data = await res.json();
+
+        // Cache using city name if available
+        if (data.name) {
+          localStorage.setItem(data.name.toLowerCase(), JSON.stringify({
+            data,
+            timestamp: Date.now()
+          }));
+        }
+
+        displayWeather(data);
+        showLastUpdated(Date.now());
+        refreshBtn.style.display = 'inline-block';
+      } catch (err) {
+        console.error('Geolocation weather fetch error:', err);
+        errorEl.textContent = "Unable to fetch weather for your location.";
+      }
+    }, (error) => {
+      console.warn('Geolocation denied or failed:', error);
+    });
+  } else {
+    console.warn('Geolocation not supported');
+  }
+});
