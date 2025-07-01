@@ -139,3 +139,40 @@ window.addEventListener('load', () => {
     console.warn('Geolocation not supported');
   }
 });
+const geoBtn = document.getElementById('geoBtn');
+
+geoBtn.addEventListener('click', () => {
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      try {
+        const res = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+        );
+        const data = await res.json();
+
+        // Optional: Cache by city name if available
+        if (data.name) {
+          localStorage.setItem(data.name.toLowerCase(), JSON.stringify({
+            data,
+            timestamp: Date.now()
+          }));
+        }
+
+        displayWeather(data);
+        showLastUpdated(Date.now());
+        refreshBtn.style.display = 'inline-block';
+      } catch (err) {
+        console.error('Error fetching location weather:', err);
+        errorEl.textContent = "Unable to fetch weather for your location.";
+      }
+    }, (error) => {
+      console.warn('Geolocation failed or denied:', error);
+      errorEl.textContent = "Geolocation is not enabled or failed.";
+    });
+  } else {
+    errorEl.textContent = "Geolocation is not supported in your browser.";
+  }
+});
