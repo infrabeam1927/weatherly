@@ -52,7 +52,7 @@ const API_KEY = part1 + part2 + part3;
 
 ## 🚀 Planned Improvements
 
-- 📍 Add geolocation support  
+- 📍 Add geolocation support ✅ 
 - 📆 Add multi-day forecast  
 - 🌙 Add dark mode toggle  ✅
 - 🌐 Add language options (i18n)
