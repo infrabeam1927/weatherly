@@ -148,3 +148,19 @@ input:checked + .slider:before {
 .toggle-label {
   font-size: 0.9rem;
 }
+.banner {
+  background-color: #e0f7fa;
+  color: #00796b;
+  padding: 8px 16px;
+  margin: 10px 0;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.banner.show {
+  display: block;
+  opacity: 1;
+}
