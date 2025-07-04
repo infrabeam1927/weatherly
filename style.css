@@ -164,3 +164,24 @@ input:checked + .slider:before {
   display: block;
   opacity: 1;
 }
+#historyBox {
+  margin-top: 20px;
+}
+#historyList {
+  list-style: none;
+  padding: 0;
+}
+#historyList li button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+#historyList li button:hover {
+  background-color: #0056b3;
+}

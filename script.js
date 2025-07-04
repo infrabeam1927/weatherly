@@ -32,7 +32,6 @@ refreshBtn.addEventListener('click', async () => {
   }
 });
 
-
 async function loadWeather(city, forceRefresh = false) {
   const cachedItem = localStorage.getItem(city);
   const now = Date.now();
@@ -57,7 +56,7 @@ async function loadWeather(city, forceRefresh = false) {
     const data = await res.json();
 
     localStorage.setItem(city, JSON.stringify({
-      data: data,
+      data,
       timestamp: now
     }));
 
@@ -81,45 +80,72 @@ function displayWeather(data) {
     <p>💧 Humidity: ${data.main.humidity}%</p>
     <p>🌬️ Wind: ${data.wind.speed} m/s</p>
   `;
+
+  if (data.name) {
+    updateRecentCities(data.name);
+  }
 }
 
 function showLastUpdated(timestamp) {
   const date = new Date(timestamp);
   lastUpdated.textContent = `Last updated: ${date.toLocaleTimeString()}`;
 }
-const darkToggle = document.getElementById('darkModeToggle');
 
-// Apply previously saved mode
+// 🌙 Dark Mode Toggle
+const darkToggle = document.getElementById('darkModeToggle');
 if (localStorage.getItem('darkMode') === 'enabled') {
   document.body.classList.add('dark-mode');
   darkToggle.checked = true;
 }
-
-// Toggle dark mode and save preference
 darkToggle.addEventListener('change', () => {
   document.body.classList.toggle('dark-mode');
-
-  if (document.body.classList.contains('dark-mode')) {
-    localStorage.setItem('darkMode', 'enabled');
-  } else {
-    localStorage.setItem('darkMode', 'disabled');
-  }
+  localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
 });
+
+// 🔁 Persistent Search History
+let recentCities = JSON.parse(localStorage.getItem('recentCities')) || [];
+const historyList = document.getElementById("historyList");
+
+function updateRecentCities(city) {
+  city = city.trim();
+  recentCities = recentCities.filter(c => c.toLowerCase() !== city.toLowerCase());
+  recentCities.unshift(city);
+  if (recentCities.length > 5) recentCities.pop();
+  localStorage.setItem('recentCities', JSON.stringify(recentCities));
+  renderCityHistory();
+}
+
+function renderCityHistory() {
+  historyList.innerHTML = '';
+  recentCities.forEach(city => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.textContent = city;
+    btn.addEventListener('click', async () => {
+      cityInput.value = city;
+      currentCity = city.toLowerCase();
+      await loadWeather(currentCity);
+    });
+    li.appendChild(btn);
+    historyList.appendChild(li);
+  });
+}
+
+// 🗺️ Auto-fetch on page load
 window.addEventListener('load', () => {
+  renderCityHistory();
+
   if ('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition(async (position) => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-      const apiKey = part1 + part2 + part3;
 
       try {
         const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
         );
-
         const data = await res.json();
 
-        // Cache using city name if available
         if (data.name) {
           localStorage.setItem(data.name.toLowerCase(), JSON.stringify({
             data,
@@ -137,10 +163,10 @@ window.addEventListener('load', () => {
     }, (error) => {
       console.warn('Geolocation denied or failed:', error);
     });
-  } else {
-    console.warn('Geolocation not supported');
   }
 });
+
+// 📍 Manual Geolocation Button
 const geoBtn = document.getElementById('geoBtn');
 
 geoBtn.addEventListener('click', () => {
@@ -156,16 +182,16 @@ geoBtn.addEventListener('click', () => {
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
         );
         const data = await res.json();
-        console.log("Geolocation data:", data);  // ✅ inspect result
 
         if (data.name) {
-          cityInput.value = data.name; // ✅ Autofill actual city name
-          localStorage.setItem(data.name.toLowerCase(), JSON.stringify({
+          cityInput.value = data.name;
+          currentCity = data.name.toLowerCase();
+          localStorage.setItem(currentCity, JSON.stringify({
             data,
             timestamp: Date.now()
           }));
         } else {
-          cityInput.value = ''; // fallback
+          cityInput.value = '';
         }
 
         displayWeather(data);
@@ -186,4 +212,3 @@ geoBtn.addEventListener('click', () => {
     errorEl.textContent = "Geolocation is not supported in your browser.";
   }
 });
-
