@@ -7,43 +7,48 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <h1>Weathrly 🌦️</h1>
+  <!-- 📍 & 🔄 Buttons outside main app -->
+  <div class="top-buttons">
+    <button id="geoBtn">📍 Use My Location</button>
+    <button id="refreshBtn" style="display: none;">🔄 Refresh</button>
+  </div>
 
-    <!-- Toggle Switch Container -->
-    <div class="toggle-container">
-      <label class="switch">
-        <input type="checkbox" id="darkModeToggle" />
-        <span class="slider round"></span>
-      </label>
-      <span class="toggle-label">Dark Mode</span>
+  <div class="main-container">
+    <!-- Weather App Core -->
+    <div class="app">
+      <h1>Weathrly 🌦️</h1>
+
+      <!-- Toggle Switch -->
+      <div class="toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="darkModeToggle" />
+          <span class="slider round"></span>
+        </label>
+        <span class="toggle-label">Dark Mode</span>
+      </div>
+
+      <!-- Search -->
+      <form id="weatherForm">
+        <input type="text" id="cityInput" placeholder="Enter city..." required />
+        <button type="submit">Get Weather</button>
+      </form>
+
+      <!-- Banner -->
+      <div id="locationBanner" class="banner" style="display: none;"></div>
+
+      <!-- Output -->
+      <div id="weatherDisplay"></div>
+      <p id="lastUpdated"></p>
+
+      <!-- Error -->
+      <p id="error" class="error"></p>
     </div>
 
-    <!-- Weather Form -->
-    <form id="weatherForm">
-      <input type="text" id="cityInput" placeholder="Enter city..." required />
-      <button type="submit">Get Weather</button>
-    </form>
-
-    <!-- 📍 Use My Location Button -->
-    <button id="geoBtn">📍 Use My Location</button>
-
-    <!-- 📍 Location Banner -->
-    <div id="locationBanner" class="banner" style="display: none;"></div>
-
-    <!-- Display Results -->
-    <div id="weatherDisplay"></div>
-    <p id="lastUpdated"></p>
-    <button id="refreshBtn" style="display: none;">🔄 Refresh</button>
-    <!-- 🔁 Recent Cities -->
+    <!-- Sidebar: Recent Cities -->
     <div id="historyBox">
       <h3>Recent Cities</h3>
       <ul id="historyList"></ul>
     </div>
-
-
-    <!-- Error Message -->
-    <p id="error" class="error"></p>
   </div>
 
   <script src="script.js"></script>
