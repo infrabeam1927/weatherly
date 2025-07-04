@@ -9,35 +9,57 @@ body {
   font-family: Arial, sans-serif;
   background: linear-gradient(to right, #4facfe, #00f2fe);
   color: #fff;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Top Buttons */
+.top-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.top-buttons button {
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.top-buttons button:hover {
+  background-color: #0056b3;
+}
+
+/* Main Layout */
 .main-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   gap: 30px;
   width: 100%;
-  max-width: 900px;
-  flex-wrap: wrap;
+  max-width: 1000px;
 }
 
-/* Main App */
+/* Weather App */
 .app {
   background-color: rgba(0, 0, 0, 0.3);
   padding: 30px 20px;
   border-radius: 10px;
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-/* Input & Buttons */
 input {
   padding: 10px;
   width: 70%;
@@ -73,18 +95,16 @@ button:hover {
   font-weight: bold;
 }
 
-/* Sidebar: Recent City History */
+/* Sidebar: Recent Cities */
 #historyBox {
-  width: 200px;
-  background-color: rgba(255,255,255,0.2);
-  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  width: 250px;
 }
 
 #historyBox h3 {
   margin-bottom: 10px;
-  font-size: 1.1rem;
   text-align: center;
 }
 
@@ -107,46 +127,6 @@ button:hover {
 
 #historyList li button:hover {
   background-color: #0056b3;
-}
-
-/* Responsive layout */
-@media (max-width: 768px) {
-  .main-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #historyBox {
-    width: 100%;
-    max-width: 400px;
-    margin-top: 20px;
-  }
-}
-
-/* Dark Mode */
-body.dark-mode {
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-  color: #f0f0f0;
-}
-
-body.dark-mode .app {
-  background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 8px rgba(255,255,255,0.1);
-}
-
-body.dark-mode input,
-body.dark-mode button {
-  background-color: #333;
-  color: #f0f0f0;
-  border: 1px solid #555;
-}
-
-body.dark-mode button:hover {
-  background-color: #444;
-}
-
-body.dark-mode #historyBox {
-  background-color: rgba(0,0,0,0.4);
 }
 
 /* Toggle Switch Styling */
@@ -207,7 +187,7 @@ input:checked + .slider:before {
   font-size: 0.9rem;
 }
 
-/* Banner */
+/* Location Banner */
 .banner {
   background-color: #e0f7fa;
   color: #00796b;
@@ -223,4 +203,30 @@ input:checked + .slider:before {
 .banner.show {
   display: block;
   opacity: 1;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: #f0f0f0;
+}
+
+body.dark-mode .app {
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+}
+
+body.dark-mode input,
+body.dark-mode button,
+body.dark-mode .top-buttons button,
+body.dark-mode #historyList li button {
+  background-color: #333;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+body.dark-mode button:hover,
+body.dark-mode .top-buttons button:hover,
+body.dark-mode #historyList li button:hover {
+  background-color: #444;
 }

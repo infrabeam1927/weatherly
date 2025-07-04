@@ -7,12 +7,18 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- 📍 & 🔄 Buttons outside main app -->
+  <div class="top-buttons">
+    <button id="geoBtn">📍 Use My Location</button>
+    <button id="refreshBtn" style="display: none;">🔄 Refresh</button>
+  </div>
+
   <div class="main-container">
-    <!-- Main app content -->
+    <!-- Weather App Core -->
     <div class="app">
       <h1>Weathrly 🌦️</h1>
 
-      <!-- Toggle Switch Container -->
+      <!-- Toggle Switch -->
       <div class="toggle-container">
         <label class="switch">
           <input type="checkbox" id="darkModeToggle" />
@@ -21,28 +27,24 @@
         <span class="toggle-label">Dark Mode</span>
       </div>
 
-      <!-- Weather Form -->
+      <!-- Search -->
       <form id="weatherForm">
         <input type="text" id="cityInput" placeholder="Enter city..." required />
         <button type="submit">Get Weather</button>
       </form>
 
-      <!-- 📍 Use My Location Button -->
-      <button id="geoBtn">📍 Use My Location</button>
-
-      <!-- 📍 Location Banner -->
+      <!-- Banner -->
       <div id="locationBanner" class="banner" style="display: none;"></div>
 
-      <!-- Display Results -->
+      <!-- Output -->
       <div id="weatherDisplay"></div>
       <p id="lastUpdated"></p>
-      <button id="refreshBtn" style="display: none;">🔄 Refresh</button>
 
-      <!-- Error Message -->
+      <!-- Error -->
       <p id="error" class="error"></p>
     </div>
 
-    <!-- 🔁 Recent Cities (sidebar) -->
+    <!-- Sidebar: Recent Cities -->
     <div id="historyBox">
       <h3>Recent Cities</h3>
       <ul id="historyList"></ul>
@@ -51,3 +53,4 @@
 
   <script src="script.js"></script>
 </body>
+</html>
