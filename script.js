@@ -84,6 +84,31 @@ function displayWeather(data) {
   if (data.name) {
     updateRecentCities(data.name);
   }
+
+  setWeatherBackground(data.weather[0].main);
+}
+
+function setWeatherBackground(condition) {
+  const body = document.body;
+  body.classList.remove('sunny', 'cloudy', 'rainy', 'snowy', 'default-weather');
+
+  switch (condition.toLowerCase()) {
+    case 'clear':
+      body.classList.add('sunny');
+      break;
+    case 'clouds':
+      body.classList.add('cloudy');
+      break;
+    case 'rain':
+    case 'drizzle':
+      body.classList.add('rainy');
+      break;
+    case 'snow':
+      body.classList.add('snowy');
+      break;
+    default:
+      body.classList.add('default-weather');
+  }
 }
 
 function showLastUpdated(timestamp) {

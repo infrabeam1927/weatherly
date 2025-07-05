@@ -230,3 +230,22 @@ body.dark-mode .top-buttons button:hover,
 body.dark-mode #historyList li button:hover {
   background-color: #444;
 }
+body.sunny {
+  background: linear-gradient(to top, #f9d423, #ff4e50);
+}
+
+body.cloudy {
+  background: linear-gradient(to right, #bdc3c7, #2c3e50);
+}
+
+body.rainy {
+  background: linear-gradient(to right, #4e54c8, #8f94fb);
+}
+
+body.snowy {
+  background: linear-gradient(to right, #e0eafc, #cfdef3);
+}
+
+body.default-weather {
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+}
