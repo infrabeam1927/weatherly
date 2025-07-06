@@ -79,14 +79,17 @@ function displayWeather(data) {
     <p>🌡️ Temp: ${data.main.temp}°C</p>
     <p>💧 Humidity: ${data.main.humidity}%</p>
     <p>🌬️ Wind: ${data.wind.speed} m/s</p>
+    <div class="suggestion">${getWeatherTip(data.weather[0].main)}</div>
   `;
 
   if (data.name) {
     updateRecentCities(data.name);
   }
 
-  setWeatherBackground(data.weather[0].main);
+  // Optional: update background based on condition
+  updateBackground(data.weather[0].main);
 }
+
 
 function setWeatherBackground(condition) {
   const body = document.body;
@@ -237,3 +240,17 @@ geoBtn.addEventListener('click', () => {
     errorEl.textContent = "Geolocation is not supported in your browser.";
   }
 });
+function getWeatherTip(condition) {
+  const tips = {
+    Rain: "☔ Don’t forget your umbrella!",
+    Drizzle: "☔ Light rain – maybe grab a jacket.",
+    Thunderstorm: "⛈️ Stay indoors if possible!",
+    Snow: "❄️ Bundle up, it’s snowing!",
+    Clear: "🌞 Enjoy the sunshine!",
+    Clouds: "⛅ Might be a bit gloomy.",
+    Mist: "🌫️ Drive safe, visibility is low.",
+    Haze: "🌁 Air is a bit hazy, take it easy."
+  };
+
+  return tips[condition] || '';
+}
