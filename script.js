@@ -4,7 +4,18 @@ const display = document.getElementById('weatherDisplay');
 const errorEl = document.getElementById('error');
 const lastUpdated = document.getElementById('lastUpdated');
 const refreshBtn = document.getElementById('refreshBtn');
+const locationBanner = document.getElementById('locationBanner');
 
+function showLocationBanner(text) {
+  locationBanner.textContent = text;
+  locationBanner.style.display = 'block';
+  locationBanner.classList.add('show');
+}
+
+function hideLocationBanner() {
+  locationBanner.classList.remove('show');
+  locationBanner.style.display = 'none';
+}
 
 // Obfuscated API key
 const part1 = 'aa1d1e34e';         // example - use actual parts of your key
@@ -14,6 +25,11 @@ const API_KEY = part1 + part2 + part3;
 
 // Cache duration: 10 minutes
 const CACHE_TTL = 10 * 60 * 1000;
+
+// Prefix keeps per-city cache entries from colliding with keys like
+// 'recentCities' or 'darkMode' if a city is ever named the same.
+const CACHE_PREFIX = 'weather_';
+const cacheKey = (city) => CACHE_PREFIX + city;
 
 let currentCity = '';
 
@@ -33,33 +49,41 @@ refreshBtn.addEventListener('click', async () => {
 });
 
 async function loadWeather(city, forceRefresh = false) {
-  const cachedItem = localStorage.getItem(city);
+  const key = cacheKey(city);
+  const cachedItem = localStorage.getItem(key);
   const now = Date.now();
 
   if (cachedItem && !forceRefresh) {
-    const parsed = JSON.parse(cachedItem);
-    if (now - parsed.timestamp < CACHE_TTL) {
-      displayWeather(parsed.data);
-      showLastUpdated(parsed.timestamp);
-      refreshBtn.style.display = 'inline-block';
-      return;
-    } else {
-      localStorage.removeItem(city);
+    try {
+      const parsed = JSON.parse(cachedItem);
+      if (now - parsed.timestamp < CACHE_TTL) {
+        hideLocationBanner();
+        displayWeather(parsed.data);
+        showLastUpdated(parsed.timestamp);
+        refreshBtn.style.display = 'inline-block';
+        return;
+      } else {
+        localStorage.removeItem(key);
+      }
+    } catch (err) {
+      // Corrupt cache entry - drop it and fall through to a fresh fetch.
+      localStorage.removeItem(key);
     }
   }
 
   try {
     const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`
     );
     if (!res.ok) throw new Error('City not found');
     const data = await res.json();
 
-    localStorage.setItem(city, JSON.stringify({
+    localStorage.setItem(key, JSON.stringify({
       data,
       timestamp: now
     }));
 
+    hideLocationBanner();
     displayWeather(data);
     showLastUpdated(now);
     errorEl.textContent = '';
@@ -86,8 +110,8 @@ function displayWeather(data) {
     updateRecentCities(data.name);
   }
 
-  // Optional: update background based on condition
-  updateBackground(data.weather[0].main);
+  // Update background based on condition
+  setWeatherBackground(data.weather[0].main);
 }
 
 
@@ -172,15 +196,18 @@ window.addEventListener('load', () => {
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
         );
+        if (!res.ok) throw new Error('Location weather lookup failed');
         const data = await res.json();
 
         if (data.name) {
-          localStorage.setItem(data.name.toLowerCase(), JSON.stringify({
+          currentCity = data.name.toLowerCase();
+          localStorage.setItem(cacheKey(currentCity), JSON.stringify({
             data,
             timestamp: Date.now()
           }));
         }
 
+        showLocationBanner('Showing weather for your current location');
         displayWeather(data);
         showLastUpdated(Date.now());
         refreshBtn.style.display = 'inline-block';
@@ -209,12 +236,13 @@ geoBtn.addEventListener('click', () => {
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
         );
+        if (!res.ok) throw new Error('Location weather lookup failed');
         const data = await res.json();
 
         if (data.name) {
           cityInput.value = data.name;
           currentCity = data.name.toLowerCase();
-          localStorage.setItem(currentCity, JSON.stringify({
+          localStorage.setItem(cacheKey(currentCity), JSON.stringify({
             data,
             timestamp: Date.now()
           }));
@@ -222,6 +250,7 @@ geoBtn.addEventListener('click', () => {
           cityInput.value = '';
         }
 
+        showLocationBanner('Showing weather for your current location');
         displayWeather(data);
         showLastUpdated(Date.now());
         refreshBtn.style.display = 'inline-block';

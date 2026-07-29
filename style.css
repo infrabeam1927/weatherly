@@ -205,6 +205,27 @@ input:checked + .slider:before {
   opacity: 1;
 }
 
+/* Weather-condition backgrounds */
+body.sunny {
+  background: linear-gradient(to right, #f7b733, #fc4a1a);
+}
+
+body.cloudy {
+  background: linear-gradient(to right, #757f9a, #d7dde8);
+}
+
+body.rainy {
+  background: linear-gradient(to right, #396afc, #2948ff);
+}
+
+body.snowy {
+  background: linear-gradient(to right, #83a4d4, #b6fbff);
+}
+
+body.default-weather {
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+}
+
 /* Dark Mode Styles */
 body.dark-mode {
   background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
