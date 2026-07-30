@@ -42,20 +42,45 @@ Weathrly is a responsive and accessible weather dashboard built using **Vanilla 
    ```bash
    git clone https://github.com/yourusername/weathrly.git
    cd weathrly
+   ```
 
-2. const part1 = 'your';
-const part2 = 'split';
-const part3 = 'apikey';
-const API_KEY = part1 + part2 + part3;
+2. Add your [OpenWeatherMap](https://openweathermap.org/api) API key in `script.js`:
 
+   ```js
+   const API_KEY = 'your-api-key-here';
+   ```
 
+   > ⚠️ This is a static, client-side app, so the key is always visible in
+   > the browser's dev tools / page source no matter how it's split across
+   > variables — that split is obfuscation, not security. Don't use a key
+   > with billing enabled, and see [Known Issues](#-known-issues) below.
+
+3. Open `index.html` in your browser, or serve the folder with any static
+   file server.
+
+<br>
 
 ## 🚀 Planned Improvements
 
-- 📍 Add geolocation support ✅ 
-- 📆 Add multi-day forecast  
-- 🌙 Add dark mode toggle  ✅
+- 📆 Add multi-day forecast
 - 🌐 Add language options (i18n)
+
+<br>
+
+## ✅ Completed
+
+- 📍 Geolocation support
+- 🌙 Dark mode toggle
+
+<br>
+
+## ⚠️ Known Issues
+
+- The OpenWeatherMap API key ships in client-side `script.js`. It's split
+  into pieces to avoid a plain-text grep match, but that offers no real
+  protection — anyone can read it from the browser. Treat it as public,
+  avoid a key with billing enabled, and consider proxying requests through
+  a small backend for production use.
 
 ## 🌐 Live Demo
 
