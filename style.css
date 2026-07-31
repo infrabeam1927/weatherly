@@ -89,10 +89,59 @@ button:hover {
   margin-top: 20px;
 }
 
+.loading {
+  margin-top: 15px;
+  font-weight: bold;
+  opacity: 0.85;
+}
+
 .error {
   color: #ffdddd;
   margin-top: 15px;
   font-weight: bold;
+}
+
+/* Forecast */
+.forecast {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.forecast-card {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px 8px;
+  width: 80px;
+  text-align: center;
+}
+
+.forecast-card p {
+  margin: 4px 0;
+}
+
+.forecast-day {
+  font-weight: bold;
+}
+
+.forecast-icon {
+  font-size: 1.4rem;
+}
+
+.forecast-temp {
+  font-size: 0.85rem;
+}
+
+.forecast-desc {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+body.dark-mode .forecast-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid #555;
 }
 
 /* Sidebar: Recent Cities */

@@ -27,6 +27,16 @@
         <span class="toggle-label">Dark Mode</span>
       </div>
 
+      <!-- Unit Toggle -->
+      <div class="toggle-container">
+        <span class="toggle-label">°C</span>
+        <label class="switch">
+          <input type="checkbox" id="unitToggle" />
+          <span class="slider round"></span>
+        </label>
+        <span class="toggle-label">°F</span>
+      </div>
+
       <!-- Search -->
       <form id="weatherForm">
         <input type="text" id="cityInput" placeholder="Enter city..." required />
@@ -36,8 +46,12 @@
       <!-- Banner -->
       <div id="locationBanner" class="banner" style="display: none;"></div>
 
+      <!-- Loading -->
+      <p id="loadingIndicator" class="loading" style="display: none;">⏳ Loading weather...</p>
+
       <!-- Output -->
       <div id="weatherDisplay"></div>
+      <div id="forecastContainer" class="forecast"></div>
       <p id="lastUpdated"></p>
 
       <!-- Error -->
