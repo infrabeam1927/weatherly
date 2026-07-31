@@ -279,6 +279,7 @@ unitToggle.addEventListener('change', async () => {
 // 🔁 Persistent Search History
 let recentCities = JSON.parse(localStorage.getItem('recentCities')) || [];
 const historyList = document.getElementById("historyList");
+const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
 function updateRecentCities(city) {
   city = city.trim();
@@ -291,6 +292,17 @@ function updateRecentCities(city) {
 
 function renderCityHistory() {
   historyList.innerHTML = '';
+
+  if (recentCities.length === 0) {
+    const empty = document.createElement('li');
+    empty.className = 'history-empty';
+    empty.textContent = 'No recent searches yet.';
+    historyList.appendChild(empty);
+    clearHistoryBtn.style.display = 'none';
+    return;
+  }
+
+  clearHistoryBtn.style.display = 'inline-block';
   recentCities.forEach(city => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
@@ -304,6 +316,31 @@ function renderCityHistory() {
     historyList.appendChild(li);
   });
 }
+
+clearHistoryBtn.addEventListener('click', () => {
+  recentCities = [];
+  localStorage.removeItem('recentCities');
+  renderCityHistory();
+});
+
+// Distinguishes why geolocation failed so the user knows whether to grant
+// permission, try again, or search by city name instead.
+function geolocationErrorMessage(error) {
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      return 'Location access was denied. Enable location permissions for this site and try again.';
+    case error.POSITION_UNAVAILABLE:
+      return 'Your location could not be determined. Try again or search by city name.';
+    case error.TIMEOUT:
+      return 'Location request timed out. Try again.';
+    default:
+      return 'Unable to get your location. Try again.';
+  }
+}
+
+// Bounds how long we wait on the browser's location prompt, so a slow or
+// stalled request fails cleanly instead of leaving the UI stuck pending.
+const GEOLOCATION_OPTIONS = { timeout: 10000 };
 
 // 🗺️ Auto-fetch on page load
 window.addEventListener('load', () => {
@@ -342,60 +379,71 @@ window.addEventListener('load', () => {
         setLoading(false);
       }
     }, (error) => {
+      // Passive, automatic attempt - stay silent in the UI so a denied
+      // permission doesn't greet the user with an error on every visit.
       console.warn('Geolocation denied or failed:', error);
-    });
+    }, GEOLOCATION_OPTIONS);
   }
 });
 
 // 📍 Manual Geolocation Button
 geoBtn.addEventListener('click', () => {
-  if ('geolocation' in navigator) {
-    cityInput.value = "Loading...";
-
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `${WEATHER_URL}?lat=${lat}&lon=${lon}&units=${units}`
-        );
-        if (!res.ok) throw new Error('Location weather lookup failed');
-        const data = await res.json();
-
-        if (data.name) {
-          cityInput.value = data.name;
-          currentCity = data.name.toLowerCase();
-          localStorage.setItem(cacheKey(currentCity), JSON.stringify({
-            data,
-            timestamp: Date.now()
-          }));
-        } else {
-          cityInput.value = '';
-        }
-
-        showLocationBanner('Showing weather for your current location');
-        displayWeather(data);
-        showLastUpdated(Date.now());
-        refreshBtn.style.display = 'inline-block';
-        errorEl.textContent = '';
-        if (currentCity) await loadForecast(currentCity);
-      } catch (err) {
-        console.error('Error fetching weather for location:', err);
-        errorEl.textContent = "Unable to fetch weather for your location.";
-        cityInput.value = '';
-      } finally {
-        setLoading(false);
-      }
-    }, (error) => {
-      console.warn('Geolocation failed or denied:', error);
-      errorEl.textContent = "Geolocation is not enabled or failed.";
-      cityInput.value = '';
-    });
-  } else {
+  if (!('geolocation' in navigator)) {
     errorEl.textContent = "Geolocation is not supported in your browser.";
+    return;
   }
+
+  // Disable immediately (not just once setLoading kicks in after the
+  // position resolves) so repeated clicks can't queue up multiple
+  // concurrent location requests while the permission prompt is up.
+  setLoading(true);
+  errorEl.textContent = '';
+  cityInput.value = "Loading...";
+  showLocationBanner('📍 Detecting your location...');
+
+  navigator.geolocation.getCurrentPosition(async (position) => {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    try {
+      const res = await fetch(
+        `${WEATHER_URL}?lat=${lat}&lon=${lon}&units=${units}`
+      );
+      if (!res.ok) throw new Error('Location weather lookup failed');
+      const data = await res.json();
+
+      if (data.name) {
+        cityInput.value = data.name;
+        currentCity = data.name.toLowerCase();
+        localStorage.setItem(cacheKey(currentCity), JSON.stringify({
+          data,
+          timestamp: Date.now()
+        }));
+      } else {
+        cityInput.value = '';
+      }
+
+      showLocationBanner('Showing weather for your current location');
+      displayWeather(data);
+      showLastUpdated(Date.now());
+      refreshBtn.style.display = 'inline-block';
+      errorEl.textContent = '';
+      if (currentCity) await loadForecast(currentCity);
+    } catch (err) {
+      console.error('Error fetching weather for location:', err);
+      hideLocationBanner();
+      errorEl.textContent = "Unable to fetch weather for your location. Please try again.";
+      cityInput.value = '';
+    } finally {
+      setLoading(false);
+    }
+  }, (error) => {
+    console.warn('Geolocation failed or denied:', error);
+    hideLocationBanner();
+    errorEl.textContent = geolocationErrorMessage(error);
+    cityInput.value = '';
+    setLoading(false);
+  }, GEOLOCATION_OPTIONS);
 });
 function getWeatherTip(condition) {
   const tips = {
