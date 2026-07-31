@@ -1,6 +1,6 @@
 # 🌦️ Weathrly – Weather Dashboard Web App
 
-Weathrly is a responsive and accessible weather dashboard built using **Vanilla JavaScript**, **HTML/CSS**, and the **OpenWeatherMap API**. It fetches real-time weather data, displays it dynamically, and caches it locally for a faster and more reliable experience.
+Weathrly is a responsive and accessible weather dashboard built using **Vanilla JavaScript**, **HTML/CSS**, and the **OpenWeatherMap API**, deployed on **Vercel**. It fetches real-time weather data through a small serverless proxy, displays it dynamically, and caches it locally for a faster and more reliable experience.
 
 <br>
 
@@ -8,6 +8,9 @@ Weathrly is a responsive and accessible weather dashboard built using **Vanilla 
 
 - 🔍 Search weather by city name
 - 📡 Fetches real-time weather from OpenWeatherMap
+- 📆 5-day forecast
+- 🌡️ °C / °F unit toggle
+- ⏳ Loading indicator while a request is in flight
 - 🕓 Caches results using `localStorage` to reduce redundant API calls
 - ⏱️ Expired data (older than 10 minutes) is automatically refreshed
 - 🖥️ Responsive design for desktop, tablet, and mobile
@@ -22,7 +25,7 @@ Weathrly is a responsive and accessible weather dashboard built using **Vanilla 
 - **HTML5**
 - **CSS3** (with Flexbox + Media Queries)
 - **Vanilla JavaScript**
-- **OpenWeatherMap API**
+- **Vercel Serverless Functions** (`/api/weather`, `/api/forecast`) proxying the OpenWeatherMap API
 
 <br>
 
@@ -37,6 +40,11 @@ Weathrly is a responsive and accessible weather dashboard built using **Vanilla 
 
 ## 📦 Setup Instructions
 
+Weather requests go through two Vercel serverless functions (`/api/weather`,
+`/api/forecast`) that hold the OpenWeatherMap key server-side, so you need
+the [Vercel CLI](https://vercel.com/docs/cli) to run the app locally with
+those functions available.
+
 1. Clone the repo:
 
    ```bash
@@ -44,25 +52,33 @@ Weathrly is a responsive and accessible weather dashboard built using **Vanilla 
    cd weathrly
    ```
 
-2. Add your [OpenWeatherMap](https://openweathermap.org/api) API key in `script.js`:
+2. Install the Vercel CLI if you don't already have it:
 
-   ```js
-   const API_KEY = 'your-api-key-here';
+   ```bash
+   npm install -g vercel
    ```
 
-   > ⚠️ This is a static, client-side app, so the key is always visible in
-   > the browser's dev tools / page source no matter how it's split across
-   > variables — that split is obfuscation, not security. Don't use a key
-   > with billing enabled, and see [Known Issues](#-known-issues) below.
+3. Get an API key from [OpenWeatherMap](https://openweathermap.org/api) and
+   set it as a local environment variable:
 
-3. Open `index.html` in your browser, or serve the folder with any static
-   file server.
+   ```bash
+   vercel env add OPENWEATHER_API_KEY development
+   ```
+
+   (When deploying, set the same variable under Project Settings →
+   Environment Variables in the Vercel dashboard.)
+
+4. Run the app locally, which serves the static files and the `/api`
+   functions together:
+
+   ```bash
+   vercel dev
+   ```
 
 <br>
 
 ## 🚀 Planned Improvements
 
-- 📆 Add multi-day forecast
 - 🌐 Add language options (i18n)
 
 <br>
@@ -71,18 +87,16 @@ Weathrly is a responsive and accessible weather dashboard built using **Vanilla 
 
 - 📍 Geolocation support
 - 🌙 Dark mode toggle
-
-<br>
-
-## ⚠️ Known Issues
-
-- The OpenWeatherMap API key ships in client-side `script.js`. It's split
-  into pieces to avoid a plain-text grep match, but that offers no real
-  protection — anyone can read it from the browser. Treat it as public,
-  avoid a key with billing enabled, and consider proxying requests through
-  a small backend for production use.
+- 📆 Multi-day forecast
+- 🌡️ °C / °F unit toggle
+- 🔐 OpenWeatherMap key moved server-side behind Vercel functions
 
 ## 🌐 Live Demo
 
-> 🔗 [Click here to view Weathrly Live](https://infrabeam1927.github.io/weatherly/)
+> This app now depends on the `/api/weather` and `/api/forecast` serverless
+> functions, so it needs to be deployed on Vercel (with `OPENWEATHER_API_KEY`
+> set in the project's environment variables) rather than served as static
+> files — the previous GitHub Pages link will no longer return live weather
+> data. Deploy your own copy from the [Vercel dashboard](https://vercel.com/new)
+> by importing this repository.
 

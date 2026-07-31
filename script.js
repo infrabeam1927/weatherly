@@ -28,12 +28,6 @@ function setLoading(isLoading) {
   geoBtn.disabled = isLoading;
 }
 
-// Obfuscated API key
-const part1 = 'aa1d1e34e';         // example - use actual parts of your key
-const part2 = '51b6f6cb69275';
-const part3 = '758a8c8013';
-const API_KEY = part1 + part2 + part3;
-
 // Cache duration: 10 minutes
 const CACHE_TTL = 10 * 60 * 1000;
 
@@ -46,7 +40,8 @@ const FORECAST_PREFIX = 'forecast_';
 const cacheKey = (city) => `${CACHE_PREFIX}${units}_${city}`;
 const forecastCacheKey = (city) => `${FORECAST_PREFIX}${units}_${city}`;
 
-const FORECAST_URL = 'https://api.openweathermap.org/data/2.5/forecast';
+const WEATHER_URL = '/api/weather';
+const FORECAST_URL = '/api/forecast';
 
 let units = localStorage.getItem('units') === 'imperial' ? 'imperial' : 'metric';
 let currentCity = '';
@@ -93,7 +88,7 @@ async function loadWeather(city, forceRefresh = false) {
     }
 
     const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=${units}`
+      `${WEATHER_URL}?city=${encodeURIComponent(city)}&units=${units}`
     );
     if (!res.ok) throw new Error('City not found');
     const data = await res.json();
@@ -140,7 +135,7 @@ async function loadForecast(city) {
 
   try {
     const res = await fetch(
-      `${FORECAST_URL}?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=${units}`
+      `${FORECAST_URL}?city=${encodeURIComponent(city)}&units=${units}`
     );
     if (!res.ok) throw new Error('Forecast unavailable');
     const data = await res.json();
@@ -322,7 +317,7 @@ window.addEventListener('load', () => {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`
+          `${WEATHER_URL}?lat=${lat}&lon=${lon}&units=${units}`
         );
         if (!res.ok) throw new Error('Location weather lookup failed');
         const data = await res.json();
@@ -364,7 +359,7 @@ geoBtn.addEventListener('click', () => {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${units}`
+          `${WEATHER_URL}?lat=${lat}&lon=${lon}&units=${units}`
         );
         if (!res.ok) throw new Error('Location weather lookup failed');
         const data = await res.json();
