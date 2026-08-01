@@ -178,6 +178,19 @@ body.dark-mode .forecast-card {
   background-color: #0056b3;
 }
 
+.history-empty {
+  opacity: 0.75;
+  font-style: italic;
+  text-align: center;
+  padding: 6px 0;
+}
+
+#clearHistoryBtn {
+  width: 100%;
+  margin-top: 8px;
+  margin-left: 0;
+}
+
 /* Toggle Switch Styling */
 .toggle-container {
   display: flex;
